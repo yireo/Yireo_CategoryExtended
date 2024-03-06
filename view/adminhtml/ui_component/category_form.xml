@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="content">
+        <field name="cms_page" sortOrder="60" formElement="select">
+            <settings>
+                <dataType>string</dataType>
+                <label translate="true">Add CMS Page</label>
+            </settings>
+        </field>
+    </fieldset>
+
+    <fieldset name="search_engine_optimization">
+        <field name="custom_url" sortOrder="60" formElement="input">
+            <settings>
+                <dataType>string</dataType>
+                <label translate="true">Custom URL</label>
+            </settings>
+        </field>
+    </fieldset>
+</form>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="catalog_controller_category_init_after">
+        <observer name="Yireo_CategoryExtended::redirectCategoryRequestIfDisplayModeIsCmsPage" instance="Yireo\CategoryExtended\Observer\RedirectCategoryRequestIfDisplayModeIsCmsPage"/>
+        <observer name="Yireo_CategoryExtended::redirectCategoryRequestIfDisplayModeIsCustomUrl" instance="Yireo\CategoryExtended\Observer\RedirectCategoryRequestIfDisplayModeIsCustomUrl"/>
+    </event>
+
+    <event name="catalog_category_collection_load_before">
+        <observer name="Yireo_CategoryExtended::addCustomUrlAttributeToCategoryCollectionBeforeLoad" instance="Yireo\CategoryExtended\Observer\AddCustomUrlAttributeToCategoryCollectionBeforeLoad" />
+        <observer name="Yireo_CategoryExtended::addCmsPageAttributeToCategoryCollectionBeforeLoad" instance="Yireo\CategoryExtended\Observer\AddCmsPageAttributeToCategoryCollectionBeforeLoad"/>
+    </event>
+</config>
