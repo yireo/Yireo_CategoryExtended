@@ -3,11 +3,11 @@
 namespace Yireo\CategoryExtended\Setup\Patch\Data;
 
 use Magento\Catalog\Model\Category;
-use Magento\Cms\Model\Config\Source\Page;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
+use Yireo\CategoryExtended\Model\Category\Attribute\Source\CmsPage;
 
 class AddCmsPageAttributeToCategory implements DataPatchInterface
 {
@@ -35,7 +35,7 @@ class AddCmsPageAttributeToCategory implements DataPatchInterface
             'type' => 'int',
             'label' => 'Add CMS Page',
             'input' => 'select',
-            'source' => Page::class,
+            'source' => CmsPage::class,
             'required' => false,
             'sort_order' => 21,
             'global' => ScopedAttributeInterface::SCOPE_STORE,
