@@ -1,6 +1,6 @@
 {
     "name": "yireo/magento2-category-extended",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Allow for categories (in the main menu) to point towards CMS Pages and Custom URLs",
     "type": "magento2-module",
     "require": {
