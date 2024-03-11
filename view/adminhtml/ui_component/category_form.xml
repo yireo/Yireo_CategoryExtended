@@ -5,6 +5,9 @@
             <settings>
                 <dataType>string</dataType>
                 <label translate="true">Add CMS Page</label>
+                <tooltip>
+                    <description>Use to add a CMS Page to the navigation tree. This requires the Display Mode to be set to "CMS Page".</description>
+                </tooltip>
             </settings>
         </field>
     </fieldset>
@@ -14,6 +17,9 @@
             <settings>
                 <dataType>string</dataType>
                 <label translate="true">Custom URL</label>
+                <tooltip>
+                    <description>Use to add a Custom URL to the navigation tree. This requires the Display Mode to be set to "Custom URL".</description>
+                </tooltip>
             </settings>
         </field>
     </fieldset>
