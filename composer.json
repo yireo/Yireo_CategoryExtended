@@ -1,22 +1,38 @@
 {
-    "name": "yireo/magento2-category-extended",
-    "version": "0.1.1",
-    "description": "Allow for categories (in the main menu) to point towards CMS Pages and Custom URLs",
-    "type": "magento2-module",
-    "require": {
-        "php": "^7.4.0 || ^8.1.0 || ^8.2.0",
-        "magento/framework": "^101.0 | ^102.0 | ^103.0",
-        "magento/module-catalog": "^102.0 | ^103.0 | ^104.0"
+  "name": "yireo/magento2-category-extended",
+  "license": "OSL-3.0",
+  "version": "0.1.1",
+  "type": "magento2-module",
+  "description": "Allow for categories (in the main menu) to point towards CMS Pages and Custom URLs",
+  "keywords": [
+    "magento2",
+    "magento2-module",
+    "yireo",
+    "menu"
+  ],
+  "authors": [
+    {
+      "name": "Jisse Reitsma (Yireo)",
+      "email": "jisse@yireo.com",
+      "homepage": "https://yireo.com/"
     },
-    "license": [
-        "OSL-3.0"
-    ],
-    "autoload": {
-        "files": [
-            "registration.php"
-        ],
-        "psr-4": {
-            "Yireo\\CategoryExtended\\": ""
-        }
+    {
+      "name": "Ruud van Zuidam (Siteation)",
+      "email": "info@siteation.dev",
+      "homepage": "https://siteation.dev/"
     }
+  ],
+  "require": {
+    "php": "^7.4.0 || ^8.1.0 || ^8.2.0",
+    "magento/framework": "^101.0 | ^102.0 | ^103.0",
+    "magento/module-catalog": "^102.0 | ^103.0 | ^104.0"
+  },
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Yireo\\CategoryExtended\\": ""
+    }
+  }
 }
