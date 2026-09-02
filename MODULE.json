@@ -1,0 +1,12 @@
+{
+    "module_name": "Yireo_CategoryExtended",
+    "composer_name": "yireo/magento2-category-extended",
+    "sequence": [
+        "Magento_Catalog",
+        "Magento_Cms",
+        "Magento_Eav",
+        "Magento_Store",
+        "Magento_Sitemap",
+        "Magento_Backend"
+    ]
+}
