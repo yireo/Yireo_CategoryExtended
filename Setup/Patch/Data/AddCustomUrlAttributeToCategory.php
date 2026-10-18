@@ -3,7 +3,6 @@
 namespace Yireo\CategoryExtended\Setup\Patch\Data;
 
 use Magento\Catalog\Model\Category;
-use Magento\Cms\Model\Config\Source\Page;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
@@ -40,5 +39,7 @@ class AddCustomUrlAttributeToCategory implements DataPatchInterface
             'global' => ScopedAttributeInterface::SCOPE_STORE,
             'group' => 'Search Engine Optimization',
         ]);
+
+        return $this;
     }
 }

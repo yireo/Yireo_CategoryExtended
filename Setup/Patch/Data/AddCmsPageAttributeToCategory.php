@@ -41,5 +41,7 @@ class AddCmsPageAttributeToCategory implements DataPatchInterface
             'global' => ScopedAttributeInterface::SCOPE_STORE,
             'group' => 'Display Settings',
         ]);
+
+        return $this;
     }
 }
