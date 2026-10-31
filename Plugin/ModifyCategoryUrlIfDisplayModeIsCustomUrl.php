@@ -24,7 +24,7 @@ class ModifyCategoryUrlIfDisplayModeIsCustomUrl
             return $result;
         }
 
-        $customUrl = trim((string)$category->getCustomUrl());
+        $customUrl = trim((string)$category->getCustomUrl(), " \f\n\r\t\v\x00");
         if (empty($customUrl)) {
             return $result;
         }

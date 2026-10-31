@@ -27,7 +27,7 @@ class RedirectCategoryRequestIfDisplayModeIsCustomUrl implements ObserverInterfa
             return;
         }
 
-        $customUrl = trim((string)$category->getData('custom_url'));
+        $customUrl = trim((string)$category->getData('custom_url'), " \f\n\r\t\v\x00");
         if (empty($customUrl)) {
             return;
         }
