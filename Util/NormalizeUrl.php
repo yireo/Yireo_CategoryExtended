@@ -13,7 +13,7 @@ class NormalizeUrl
 
     public function normalize(string $url): string
     {
-        if (false === preg_match('#^(http|https)://#', $url)) {
+        if (!preg_match('#^https?://#i', $url)) {
             $url = $this->urlModel->getUrl($url);
         }
 
