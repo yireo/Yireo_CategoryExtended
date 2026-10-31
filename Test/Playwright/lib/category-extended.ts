@@ -53,15 +53,18 @@ export async function openHomepage(page: Page) {
 }
 
 /**
- * Return the top-level menu link of a category, from either the Luma or the Hyva desktop menu
+ * Return the menu link of a category, from either the Luma or the Hyva menu
+ *
+ * Not filtered on visibility: On the first Luma request after a cache clean, the theme CSS is not compiled yet and
+ * the Luma JS hides the menu as if on mobile, while the links are rendered already.
  */
 export function getMenuLink(page: Page, categoryName: string): Locator {
-    return page.locator('nav a[href]', {hasText: categoryName}).filter({visible: true}).first();
+    return page.locator('nav a[href]', {hasText: categoryName}).first();
 }
 
 export async function getMenuHref(page: Page, categoryName: string): Promise<string> {
     const link = getMenuLink(page, categoryName);
-    await expect(link, `Menu link of category "${categoryName}" (is Yireo_CategoryExtendedTestFixture enabled?)`).toBeVisible({timeout: 20000});
+    await expect(link, `Menu link of category "${categoryName}" (is Yireo_CategoryExtendedTestFixture enabled?)`).toBeAttached({timeout: 20000});
 
     return (await link.getAttribute('href')) ?? '';
 }

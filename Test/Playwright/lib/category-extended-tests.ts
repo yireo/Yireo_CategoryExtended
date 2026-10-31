@@ -3,7 +3,6 @@ import {
     expect,
     configureTheme,
     openHomepage,
-    getMenuLink,
     getMenuHref,
     getBaseUrl,
     categories,
@@ -26,7 +25,7 @@ export function defineCategoryExtendedTests(theme: string) {
         const href = await getMenuHref(page, categories.cmsPage);
         expect(new URL(href).pathname).toBe('/' + cmsPageIdentifier + '/');
 
-        await getMenuLink(page, categories.cmsPage).click();
+        await page.goto(href);
         await expect(page).toHaveURL(new RegExp('/' + cmsPageIdentifier + '/?$'));
         await expect(page.locator('h1')).toContainText(cmsPageTitle);
     });
@@ -44,7 +43,7 @@ export function defineCategoryExtendedTests(theme: string) {
         const href = await getMenuHref(page, categories.inactiveCmsPage);
         expect(new URL(href).pathname).toBe('/ce-inactive-cms-page.html');
 
-        await getMenuLink(page, categories.inactiveCmsPage).click();
+        await page.goto(href);
         await expect(page).toHaveURL(/\/ce-inactive-cms-page\.html$/);
         await expect(page.locator('h1')).toContainText(categories.inactiveCmsPage);
     });
