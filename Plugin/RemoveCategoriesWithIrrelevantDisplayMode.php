@@ -22,8 +22,10 @@ class RemoveCategoriesWithIrrelevantDisplayMode
      */
     public function afterGetCollection(Category $subject, array $categories, $storeId): array
     {
-        return array_filter($categories, function($categoryId) {
-            return false === in_array($categoryId, $this->getCategoryIdsWithIrrelevantDisplayMode());
+        $irrelevantCategoryIds = $this->getCategoryIdsWithIrrelevantDisplayMode();
+
+        return array_filter($categories, function ($categoryId) use ($irrelevantCategoryIds) {
+            return false === in_array($categoryId, $irrelevantCategoryIds);
         }, ARRAY_FILTER_USE_KEY);
     }
 
