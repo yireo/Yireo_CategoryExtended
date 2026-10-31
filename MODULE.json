@@ -8,5 +8,7 @@
         "Magento_Store",
         "Magento_Sitemap",
         "Magento_Backend"
-    ]
+    ],
+    "phpcs_severity": "7",
+    "phpstan_level": "1"
 }
