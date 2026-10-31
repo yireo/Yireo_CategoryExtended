@@ -30,7 +30,7 @@ class RemoveCategoriesWithIrrelevantDisplayMode
     private function getCategoryIdsWithIrrelevantDisplayMode(): array
     {
         $collection = $this->collectionFactory->create();
-        $collection->addAttributeToFilter('display_mode', ['in' => $this->categoryExtended->getExtendedDisplayModes()]);
+        $collection->addAttributeToFilter('display_mode', ['in' => array_keys($this->categoryExtended->getExtendedDisplayModes())]);
         return $collection->getAllIds();
     }
 }
