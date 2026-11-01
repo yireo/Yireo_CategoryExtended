@@ -3,8 +3,7 @@
 namespace Yireo\CategoryExtended\Observer;
 
 use Magento\Catalog\Api\Data\CategoryInterface;
-use Magento\Framework\App\Response\Http;
-use Magento\Framework\App\ResponseFactory;
+use Magento\Framework\App\Action\Action;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\UrlInterface;
@@ -14,7 +13,6 @@ use Yireo\CategoryExtended\Util\NormalizeUrl;
 class RedirectCategoryRequestIfDisplayModeIsCustomUrl implements ObserverInterface
 {
     public function __construct(
-        private ResponseFactory $responseFactory,
         private NormalizeUrl $normalizeUrl
     ) {
     }
@@ -34,9 +32,8 @@ class RedirectCategoryRequestIfDisplayModeIsCustomUrl implements ObserverInterfa
 
         $customUrl = $this->normalizeUrl->normalize($customUrl);
 
-        /** @var Http $response */
-        $response = $this->responseFactory->create();
-        $response->setRedirect($customUrl);
-        $response->sendResponse();
+        /** @var Action $action */
+        $action = $observer->getEvent()->getControllerAction();
+        $action->getResponse()->setRedirect($customUrl);
     }
 }

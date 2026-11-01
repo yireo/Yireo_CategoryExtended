@@ -3,8 +3,7 @@
 namespace Yireo\CategoryExtended\Observer;
 
 use Magento\Catalog\Api\Data\CategoryInterface;
-use Magento\Framework\App\Response\Http;
-use Magento\Framework\App\ResponseFactory;
+use Magento\Framework\App\Action\Action;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Yireo\CategoryExtended\Exception\InvalidCmsPageId;
@@ -14,7 +13,6 @@ use Yireo\CategoryExtended\Util\GetUrlByCmsPageId;
 class RedirectCategoryRequestIfDisplayModeIsCmsPage implements ObserverInterface
 {
     public function __construct(
-        private ResponseFactory $responseFactory,
         private GetUrlByCmsPageId $getUrlByCmsPageId
     ) {
     }
@@ -33,9 +31,8 @@ class RedirectCategoryRequestIfDisplayModeIsCmsPage implements ObserverInterface
             return;
         }
 
-        /** @var Http $response */
-        $response = $this->responseFactory->create();
-        $response->setRedirect($url);
-        $response->sendResponse();
+        /** @var Action $action */
+        $action = $observer->getEvent()->getControllerAction();
+        $action->getResponse()->setRedirect($url);
     }
 }

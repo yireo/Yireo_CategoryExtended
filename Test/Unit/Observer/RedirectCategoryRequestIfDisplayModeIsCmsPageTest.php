@@ -2,8 +2,8 @@
 
 namespace Yireo\CategoryExtended\Test\Unit\Observer;
 
+use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Response\Http;
-use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event;
 use Magento\Framework\Event\Observer;
@@ -17,43 +17,46 @@ class RedirectCategoryRequestIfDisplayModeIsCmsPageTest extends TestCase
 {
     public function testOtherDisplayModeDoesNotRedirect(): void
     {
-        $responseFactory = $this->createMock(ResponseFactory::class);
-        $responseFactory->expects($this->never())->method('create');
+        $action = $this->createMock(Action::class);
+        $action->expects($this->never())->method('getResponse');
         $getUrlByCmsPageId = $this->createMock(GetUrlByCmsPageId::class);
         $getUrlByCmsPageId->expects($this->never())->method('get');
 
-        (new RedirectCategoryRequestIfDisplayModeIsCmsPage($responseFactory, $getUrlByCmsPageId))
-            ->execute($this->createObserver(['display_mode' => 'PRODUCTS', 'cms_page' => 42]));
+        (new RedirectCategoryRequestIfDisplayModeIsCmsPage($getUrlByCmsPageId))
+            ->execute($this->createObserver(['display_mode' => 'PRODUCTS', 'cms_page' => 42], $action));
     }
 
     public function testInvalidCmsPageDoesNotRedirect(): void
     {
-        $responseFactory = $this->createMock(ResponseFactory::class);
-        $responseFactory->expects($this->never())->method('create');
+        $action = $this->createMock(Action::class);
+        $action->expects($this->never())->method('getResponse');
         $getUrlByCmsPageId = $this->createMock(GetUrlByCmsPageId::class);
         $getUrlByCmsPageId->method('get')->with(42)->willThrowException(new InvalidCmsPageId('CMS Page not found'));
 
-        (new RedirectCategoryRequestIfDisplayModeIsCmsPage($responseFactory, $getUrlByCmsPageId))
-            ->execute($this->createObserver(['display_mode' => CategoryExtended::DM_CMS_PAGE, 'cms_page' => '42']));
+        (new RedirectCategoryRequestIfDisplayModeIsCmsPage($getUrlByCmsPageId))
+            ->execute($this->createObserver(['display_mode' => CategoryExtended::DM_CMS_PAGE, 'cms_page' => '42'], $action));
     }
 
     public function testValidCmsPageRedirects(): void
     {
         $response = $this->createMock(Http::class);
         $response->expects($this->once())->method('setRedirect')->with('https://shop.test/about-us')->willReturnSelf();
-        $response->expects($this->once())->method('sendResponse');
+        $response->expects($this->never())->method('sendResponse');
 
-        $responseFactory = $this->createMock(ResponseFactory::class);
-        $responseFactory->expects($this->once())->method('create')->willReturn($response);
+        $action = $this->createMock(Action::class);
+        $action->method('getResponse')->willReturn($response);
         $getUrlByCmsPageId = $this->createMock(GetUrlByCmsPageId::class);
         $getUrlByCmsPageId->method('get')->with(42)->willReturn('https://shop.test/about-us');
 
-        (new RedirectCategoryRequestIfDisplayModeIsCmsPage($responseFactory, $getUrlByCmsPageId))
-            ->execute($this->createObserver(['display_mode' => CategoryExtended::DM_CMS_PAGE, 'cms_page' => '42']));
+        (new RedirectCategoryRequestIfDisplayModeIsCmsPage($getUrlByCmsPageId))
+            ->execute($this->createObserver(['display_mode' => CategoryExtended::DM_CMS_PAGE, 'cms_page' => '42'], $action));
     }
 
-    private function createObserver(array $categoryData): Observer
+    private function createObserver(array $categoryData, Action $action): Observer
     {
-        return new Observer(['event' => new Event(['category' => new DataObject($categoryData)])]);
+        return new Observer(['event' => new Event([
+            'category' => new DataObject($categoryData),
+            'controller_action' => $action,
+        ])]);
     }
 }

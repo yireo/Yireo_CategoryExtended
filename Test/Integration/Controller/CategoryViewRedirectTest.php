@@ -3,11 +3,8 @@
 namespace Yireo\CategoryExtended\Test\Integration\Controller;
 
 use Magento\Framework\App\Response\Http as HttpResponse;
-use Magento\Framework\App\ResponseFactory;
 use Magento\TestFramework\TestCase\AbstractController;
 use Yireo\CategoryExtended\Model\CategoryExtended;
-use Yireo\CategoryExtended\Observer\RedirectCategoryRequestIfDisplayModeIsCmsPage;
-use Yireo\CategoryExtended\Observer\RedirectCategoryRequestIfDisplayModeIsCustomUrl;
 use Yireo\CategoryExtended\Test\Integration\Fixture\CreateCategoryExtendedFixtures;
 
 /**
@@ -18,26 +15,6 @@ use Yireo\CategoryExtended\Test\Integration\Fixture\CreateCategoryExtendedFixtur
 class CategoryViewRedirectTest extends AbstractController
 {
     use CreateCategoryExtendedFixtures;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $responseFactory = $this->createMock(ResponseFactory::class);
-        $responseFactory->method('create')->willReturnCallback(fn () => $this->getResponse());
-        $this->_objectManager->addSharedInstance($responseFactory, ResponseFactory::class);
-        $this->_objectManager->removeSharedInstance(RedirectCategoryRequestIfDisplayModeIsCmsPage::class);
-        $this->_objectManager->removeSharedInstance(RedirectCategoryRequestIfDisplayModeIsCustomUrl::class);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->_objectManager->removeSharedInstance(ResponseFactory::class);
-        $this->_objectManager->removeSharedInstance(RedirectCategoryRequestIfDisplayModeIsCmsPage::class);
-        $this->_objectManager->removeSharedInstance(RedirectCategoryRequestIfDisplayModeIsCustomUrl::class);
-
-        parent::tearDown();
-    }
 
     public function testCmsPageCategoryRedirectsToCmsPage(): void
     {
