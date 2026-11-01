@@ -8,7 +8,7 @@ export const categories = {
     inactiveCmsPage: 'CE Inactive CMS Page',
     customUrlAbsolute: 'CE Custom URL Absolute',
     customUrlRelative: 'CE Custom URL Relative',
-    sample: 'Gear',
+    regular: 'CE Regular Category',
 };
 
 export const cmsPageIdentifier = 'category-extended-test-page';

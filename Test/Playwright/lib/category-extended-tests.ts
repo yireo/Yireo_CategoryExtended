@@ -61,7 +61,7 @@ export function defineCategoryExtendedTests(theme: string) {
     });
 
     test('keeps the URL of a regular category', async function ({page}) {
-        const href = await getMenuHref(page, categories.sample);
-        expect(new URL(href).pathname).toBe('/gear.html');
+        const href = await getMenuHref(page, categories.regular);
+        expect(new URL(href).pathname).toBe('/ce-regular-category.html');
     });
 }
