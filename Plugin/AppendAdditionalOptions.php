@@ -14,8 +14,8 @@ class AppendAdditionalOptions
      */
     public function afterGetAllOptions(Mode $subject, array $result): array
     {
-        $result[] = ['value' => CategoryExtended::DM_CMS_PAGE, 'label' => 'CMS Page'];
-        $result[] = ['value' => CategoryExtended::DM_CUSTOM_URL, 'label' => 'Custom URL'];
+        $result[] = ['value' => CategoryExtended::DM_CMS_PAGE, 'label' => __('CMS Page')];
+        $result[] = ['value' => CategoryExtended::DM_CUSTOM_URL, 'label' => __('Custom URL')];
 
         return $result;
     }

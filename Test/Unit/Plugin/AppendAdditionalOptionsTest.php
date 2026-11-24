@@ -17,6 +17,8 @@ class AppendAdditionalOptionsTest extends TestCase
 
         $result = (new AppendAdditionalOptions())->afterGetAllOptions($this->createMock(Mode::class), $original);
 
+        $result = array_map(fn (array $option) => ['value' => $option['value'], 'label' => (string)$option['label']], $result);
+
         $this->assertSame([
             ['value' => 'PRODUCTS', 'label' => 'Products only'],
             ['value' => CategoryExtended::DM_CMS_PAGE, 'label' => 'CMS Page'],
