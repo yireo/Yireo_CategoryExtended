@@ -2,9 +2,9 @@
 
 namespace Yireo\CategoryExtended\Test\Unit\Model\Category\Attribute\Source;
 
-use Magento\Cms\Helper\Page as PageHelper;
-use Magento\Cms\Model\Page;
-use Magento\Cms\Model\PageFactory;
+use ArrayIterator;
+use Magento\Cms\Model\ResourceModel\Page\Collection;
+use Magento\Cms\Model\ResourceModel\Page\CollectionFactory;
 use Magento\Framework\DataObject;
 use PHPUnit\Framework\TestCase;
 use Yireo\CategoryExtended\Model\Category\Attribute\Source\CmsPage;
@@ -13,16 +13,10 @@ class CmsPageTest extends TestCase
 {
     public function testGetAllOptionsStartsWithEmptyOptionFollowedByPages(): void
     {
-        $page = $this->createMock(Page::class);
-        $page->method('getCollection')->willReturn([
+        $options = $this->createSource([
             new DataObject(['id' => 1, 'title' => 'Home page']),
             new DataObject(['id' => 2, 'title' => 'About us']),
-        ]);
-
-        $pageFactory = $this->createMock(PageFactory::class);
-        $pageFactory->method('create')->willReturn($page);
-
-        $options = (new CmsPage($pageFactory, $this->createMock(PageHelper::class)))->getAllOptions();
+        ])->getAllOptions();
 
         $this->assertCount(3, $options);
         $this->assertSame('', $options[0]['value']);
@@ -31,17 +25,30 @@ class CmsPageTest extends TestCase
         $this->assertSame(['value' => 2, 'label' => 'About us'], $options[2]);
     }
 
+    public function testGetAllOptionsWithoutEmptyOption(): void
+    {
+        $options = $this->createSource([new DataObject(['id' => 1, 'title' => 'Home page'])])->getAllOptions(false);
+
+        $this->assertSame([['value' => 1, 'label' => 'Home page']], $options);
+    }
+
     public function testGetAllOptionsWithoutPagesOnlyReturnsEmptyOption(): void
     {
-        $page = $this->createMock(Page::class);
-        $page->method('getCollection')->willReturn([]);
-
-        $pageFactory = $this->createMock(PageFactory::class);
-        $pageFactory->method('create')->willReturn($page);
-
-        $options = (new CmsPage($pageFactory, $this->createMock(PageHelper::class)))->getAllOptions();
+        $options = $this->createSource([])->getAllOptions();
 
         $this->assertCount(1, $options);
         $this->assertSame('', $options[0]['value']);
+    }
+
+    private function createSource(array $pages): CmsPage
+    {
+        $collection = $this->createMock(Collection::class);
+        $collection->expects($this->once())->method('addFieldToSelect')->with(['page_id', 'title'])->willReturnSelf();
+        $collection->method('getIterator')->willReturn(new ArrayIterator($pages));
+
+        $collectionFactory = $this->createMock(CollectionFactory::class);
+        $collectionFactory->method('create')->willReturn($collection);
+
+        return new CmsPage($collectionFactory);
     }
 }
