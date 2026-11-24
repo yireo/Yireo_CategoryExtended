@@ -7,7 +7,6 @@
     </event>
 
     <event name="catalog_category_collection_load_before">
-        <observer name="Yireo_CategoryExtended::addCustomUrlAttributeToCategoryCollectionBeforeLoad" instance="Yireo\CategoryExtended\Observer\AddCustomUrlAttributeToCategoryCollectionBeforeLoad" />
-        <observer name="Yireo_CategoryExtended::addCmsPageAttributeToCategoryCollectionBeforeLoad" instance="Yireo\CategoryExtended\Observer\AddCmsPageAttributeToCategoryCollectionBeforeLoad"/>
+        <observer name="Yireo_CategoryExtended::addExtendedAttributesToCategoryCollectionBeforeLoad" instance="Yireo\CategoryExtended\Observer\AddExtendedAttributesToCategoryCollectionBeforeLoad"/>
     </event>
 </config>
