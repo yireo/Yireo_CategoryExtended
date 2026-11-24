@@ -8,6 +8,7 @@ use Magento\Eav\Model\Config as EavConfig;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
+use Yireo\CategoryExtended\Model\Category\Attribute\Backend\CustomUrl;
 use Yireo\CategoryExtended\Model\Category\Attribute\Source\CmsPage;
 
 class CategoryAttributesTest extends TestCase
@@ -29,6 +30,7 @@ class CategoryAttributesTest extends TestCase
 
         $this->assertSame('varchar', $attribute->getBackendType());
         $this->assertSame('text', $attribute->getFrontendInput());
+        $this->assertSame(CustomUrl::class, $attribute->getBackendModel());
         $this->assertSame(ScopedAttributeInterface::SCOPE_STORE, (int)$attribute->getIsGlobal());
         $this->assertFalse((bool)$attribute->getIsRequired());
     }

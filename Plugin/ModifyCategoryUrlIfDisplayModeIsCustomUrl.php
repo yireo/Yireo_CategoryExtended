@@ -2,6 +2,7 @@
 
 namespace Yireo\CategoryExtended\Plugin;
 
+use Yireo\CategoryExtended\Exception\InvalidCustomUrl;
 use Yireo\CategoryExtended\Model\CategoryExtended;
 use Yireo\CategoryExtended\Util\NormalizeUrl;
 
@@ -29,6 +30,10 @@ class ModifyCategoryUrlIfDisplayModeIsCustomUrl
             return $result;
         }
 
-        return $this->normalizeUrl->normalize($customUrl);
+        try {
+            return $this->normalizeUrl->normalize($customUrl);
+        } catch (InvalidCustomUrl $e) {
+            return $result;
+        }
     }
 }

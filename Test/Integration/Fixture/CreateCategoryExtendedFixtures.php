@@ -14,7 +14,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 
 trait CreateCategoryExtendedFixtures
 {
-    private function createCmsPage(string $identifier, bool $active = true): PageInterface
+    private function createCmsPage(string $identifier, bool $active = true, array $storeIds = [0]): PageInterface
     {
         $objectManager = Bootstrap::getObjectManager();
 
@@ -25,7 +25,7 @@ trait CreateCategoryExtendedFixtures
         $page->setContent('<p>Category Extended test page ' . $identifier . '</p>');
         $page->setPageLayout('1column');
         $page->setIsActive($active);
-        $page->setData('stores', [0]);
+        $page->setData('stores', $storeIds);
 
         return $objectManager->get(PageRepositoryInterface::class)->save($page);
     }
@@ -70,5 +70,23 @@ trait CreateCategoryExtendedFixtures
         $objectManager->get(CategoryResource::class)->load($category, $categoryId);
 
         return $category;
+    }
+
+    private function storeCustomUrlWithoutValidation(Category $category, string $customUrl): void
+    {
+        $objectManager = Bootstrap::getObjectManager();
+        $categoryResource = $objectManager->get(CategoryResource::class);
+        $attribute = $categoryResource->getAttribute('custom_url');
+
+        $categoryResource->getConnection()->insertOnDuplicate(
+            $attribute->getBackendTable(),
+            [
+                'attribute_id' => (int)$attribute->getId(),
+                'store_id' => 0,
+                $categoryResource->getLinkField() => (int)$category->getData($categoryResource->getLinkField()),
+                'value' => $customUrl,
+            ],
+            ['value']
+        );
     }
 }

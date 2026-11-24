@@ -9,6 +9,7 @@ use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 use PHPUnit\Framework\TestCase;
 use Yireo\CategoryExtended\Model\CategoryExtended;
 use Yireo\CategoryExtended\Plugin\ModifyCategoryUrlIfDisplayModeIsCustomUrl;
+use Yireo\CategoryExtended\Util\CustomUrlValidator;
 use Yireo\CategoryExtended\Util\NormalizeUrl;
 
 class ModifyCategoryUrlIfDisplayModeIsCustomUrlTest extends TestCase
@@ -51,6 +52,15 @@ class ModifyCategoryUrlIfDisplayModeIsCustomUrlTest extends TestCase
         $this->assertSame('https://shop.test/customer/account/login', $this->getUrl($category, $this->once()));
     }
 
+    public function testUnsafeCustomUrlReturnsOriginalUrl(): void
+    {
+        foreach (['javascript://example.com/%0aalert(1)', 'https://evil.example/" onmouseover="alert(1)', 'foo"bar'] as $customUrl) {
+            $category = new DataObject(['display_mode' => CategoryExtended::DM_CUSTOM_URL, 'custom_url' => $customUrl]);
+
+            $this->assertSame(self::ORIGINAL_URL, $this->getUrl($category, $this->never()));
+        }
+    }
+
     private function getUrl(DataObject $category, InvocationOrder $getUrlExpectation): string
     {
         $urlModel = $this->createMock(UrlInterface::class);
@@ -58,7 +68,7 @@ class ModifyCategoryUrlIfDisplayModeIsCustomUrlTest extends TestCase
             ->method('getUrl')
             ->willReturnCallback(fn (string $path) => 'https://shop.test/' . $path);
 
-        $plugin = new ModifyCategoryUrlIfDisplayModeIsCustomUrl(new NormalizeUrl($urlModel));
+        $plugin = new ModifyCategoryUrlIfDisplayModeIsCustomUrl(new NormalizeUrl($urlModel, new CustomUrlValidator()));
 
         return $plugin->afterGetCategoryUrl($this->createMock(CategoryHelper::class), self::ORIGINAL_URL, $category);
     }

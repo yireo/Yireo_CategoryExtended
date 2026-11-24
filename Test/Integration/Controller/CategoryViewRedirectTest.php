@@ -62,6 +62,16 @@ class CategoryViewRedirectTest extends AbstractController
         $this->assertRedirect($this->matchesRegularExpression('#^https?://.+/customer/account/login#'));
     }
 
+    public function testUnsafeStoredCustomUrlDoesNotRedirect(): void
+    {
+        $category = $this->createCategory('CE Redirect Unsafe', CategoryExtended::DM_CUSTOM_URL);
+        $this->storeCustomUrlWithoutValidation($category, 'javascript://example.com/%0aalert(document.domain)');
+
+        $this->dispatch('catalog/category/view/id/' . $category->getId());
+
+        $this->assertFalse($this->getHttpResponse()->isRedirect());
+    }
+
     public function testDefaultCategoryDoesNotRedirect(): void
     {
         $category = $this->createCategory('CE Redirect Default');

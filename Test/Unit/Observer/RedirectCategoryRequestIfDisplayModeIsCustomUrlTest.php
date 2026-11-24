@@ -11,6 +11,7 @@ use Magento\Framework\UrlInterface;
 use PHPUnit\Framework\TestCase;
 use Yireo\CategoryExtended\Model\CategoryExtended;
 use Yireo\CategoryExtended\Observer\RedirectCategoryRequestIfDisplayModeIsCustomUrl;
+use Yireo\CategoryExtended\Util\CustomUrlValidator;
 use Yireo\CategoryExtended\Util\NormalizeUrl;
 
 class RedirectCategoryRequestIfDisplayModeIsCustomUrlTest extends TestCase
@@ -52,6 +53,19 @@ class RedirectCategoryRequestIfDisplayModeIsCustomUrlTest extends TestCase
         ], $this->createRedirectingAction('https://shop.test/customer/account/login')));
     }
 
+    public function testUnsafeCustomUrlDoesNotRedirect(): void
+    {
+        $action = $this->createNonRedirectingAction();
+        $observer = $this->createObserverInstance();
+
+        foreach (['javascript://example.com/%0aalert(1)', "https://x.example/a\r\nSet-Cookie: a=b", 'mailto:a@b.c'] as $customUrl) {
+            $observer->execute($this->createObserver([
+                'display_mode' => CategoryExtended::DM_CUSTOM_URL,
+                'custom_url' => $customUrl,
+            ], $action));
+        }
+    }
+
     private function createNonRedirectingAction(): Action
     {
         $action = $this->createMock(Action::class);
@@ -77,7 +91,7 @@ class RedirectCategoryRequestIfDisplayModeIsCustomUrlTest extends TestCase
         $urlModel = $this->createMock(UrlInterface::class);
         $urlModel->method('getUrl')->willReturnCallback(fn (string $path) => 'https://shop.test/' . $path);
 
-        return new RedirectCategoryRequestIfDisplayModeIsCustomUrl(new NormalizeUrl($urlModel));
+        return new RedirectCategoryRequestIfDisplayModeIsCustomUrl(new NormalizeUrl($urlModel, new CustomUrlValidator()));
     }
 
     private function createObserver(array $categoryData, Action $action): Observer

@@ -6,7 +6,7 @@ use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\UrlInterface;
+use Yireo\CategoryExtended\Exception\InvalidCustomUrl;
 use Yireo\CategoryExtended\Model\CategoryExtended;
 use Yireo\CategoryExtended\Util\NormalizeUrl;
 
@@ -30,7 +30,11 @@ class RedirectCategoryRequestIfDisplayModeIsCustomUrl implements ObserverInterfa
             return;
         }
 
-        $customUrl = $this->normalizeUrl->normalize($customUrl);
+        try {
+            $customUrl = $this->normalizeUrl->normalize($customUrl);
+        } catch (InvalidCustomUrl $e) {
+            return;
+        }
 
         /** @var Action $action */
         $action = $observer->getEvent()->getControllerAction();
