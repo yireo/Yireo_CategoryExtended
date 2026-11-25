@@ -2,13 +2,45 @@
     "module_name": "Yireo_CategoryExtended",
     "composer_name": "yireo/magento2-category-extended",
     "sequence": [
+        "Magento_Backend",
         "Magento_Catalog",
         "Magento_Cms",
         "Magento_Eav",
-        "Magento_Store",
         "Magento_Sitemap",
-        "Magento_Backend"
+        "Magento_Store"
     ],
     "phpcs_severity": "7",
-    "phpstan_level": "1"
+    "phpstan_level": "1",
+    "php_versions": [
+        "8.1",
+        "8.2"
+    ],
+    "skip_magento_versions": [],
+    "skip_css_utils": false,
+    "modules": [
+        "Magento_AdminNotification",
+        "Magento_Backend",
+        "Magento_Catalog",
+        "Magento_Cms",
+        "Magento_Config",
+        "Magento_Cron",
+        "Magento_Csp",
+        "Magento_Customer",
+        "Magento_Directory",
+        "Magento_Eav",
+        "Magento_Indexer",
+        "Magento_MediaGalleryUiApi",
+        "Magento_Robots",
+        "Magento_Sitemap",
+        "Magento_Store",
+        "Magento_Theme",
+        "Magento_Variable"
+    ],
+    "components": [],
+    "config": [],
+    "tests": {
+        "unit": 44,
+        "integration": 27,
+        "functional": 0
+    }
 }
