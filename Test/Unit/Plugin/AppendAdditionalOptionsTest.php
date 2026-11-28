@@ -25,4 +25,14 @@ class AppendAdditionalOptionsTest extends TestCase
             ['value' => CategoryExtended::DM_CUSTOM_URL, 'label' => 'Custom URL'],
         ], $result);
     }
+
+    public function testAppendsOptionsToEmptyResult(): void
+    {
+        $result = (new AppendAdditionalOptions())->afterGetAllOptions($this->createMock(Mode::class), []);
+
+        $this->assertSame(
+            [CategoryExtended::DM_CMS_PAGE, CategoryExtended::DM_CUSTOM_URL],
+            array_column($result, 'value')
+        );
+    }
 }

@@ -37,6 +37,20 @@ class RedirectCategoryRequestIfDisplayModeIsCmsPageTest extends TestCase
             ->execute($this->createObserver(['display_mode' => CategoryExtended::DM_CMS_PAGE, 'cms_page' => '42'], $action));
     }
 
+    public function testMissingCmsPageIdDoesNotRedirect(): void
+    {
+        $action = $this->createMock(Action::class);
+        $action->expects($this->never())->method('getResponse');
+        $getUrlByCmsPageId = $this->createMock(GetUrlByCmsPageId::class);
+        $getUrlByCmsPageId->expects($this->once())
+            ->method('get')
+            ->with(0)
+            ->willThrowException(new InvalidCmsPageId('Empty CMS Page ID'));
+
+        (new RedirectCategoryRequestIfDisplayModeIsCmsPage($getUrlByCmsPageId))
+            ->execute($this->createObserver(['display_mode' => CategoryExtended::DM_CMS_PAGE], $action));
+    }
+
     public function testValidCmsPageRedirects(): void
     {
         $response = $this->createMock(Http::class);
