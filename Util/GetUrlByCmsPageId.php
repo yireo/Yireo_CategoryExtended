@@ -43,7 +43,7 @@ class GetUrlByCmsPageId
             throw new InvalidCmsPageId('CMS Page is not assigned to the current store');
         }
 
-        return $this->urlModel->getUrl($cmsPage->getIdentifier());
+        return $this->urlModel->getUrl(null, ['_direct' => $cmsPage->getIdentifier()]);
     }
 
     private function isAssignedToCurrentStore(array $storeIds): bool

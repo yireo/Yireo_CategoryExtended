@@ -22,18 +22,35 @@ class NormalizeUrlTest extends TestCase
         }
     }
 
-    public function testRelativeUrlIsMadeAbsolute(): void
+    /**
+     * @dataProvider getRelativeUrls
+     */
+    #[DataProvider('getRelativeUrls')]
+    public function testRelativeUrlIsMadeAbsoluteAsDirectPath(string $url, string $expectedDirectPath): void
     {
-        $urls = ['customer/account/login', 'about-us', 'ftp-page/http://'];
         $urlModel = $this->createMock(UrlInterface::class);
-        $urlModel->expects($this->exactly(count($urls)))
+        $urlModel->expects($this->once())
             ->method('getUrl')
-            ->willReturnCallback(fn (string $path) => 'https://shop.test/' . $path);
+            ->with(null, ['_direct' => $expectedDirectPath])
+            ->willReturn('https://shop.test/' . $expectedDirectPath);
+
         $normalizeUrl = new NormalizeUrl($urlModel, new CustomUrlValidator());
 
-        foreach ($urls as $url) {
-            $this->assertSame('https://shop.test/' . $url, $normalizeUrl->normalize($url));
-        }
+        $this->assertSame('https://shop.test/' . $expectedDirectPath, $normalizeUrl->normalize($url));
+    }
+
+    public static function getRelativeUrls(): array
+    {
+        return [
+            ['customer/account/login', 'customer/account/login'],
+            ['about-us', 'about-us'],
+            ['/about-us', 'about-us'],
+            ['about-us.html?foo=bar', 'about-us.html?foo=bar'],
+            ['about-us.html?foo=bar#top', 'about-us.html?foo=bar#top'],
+            ['page#anchor', 'page#anchor'],
+            ['company/about/team/history', 'company/about/team/history'],
+            ['ftp-page/http://', 'ftp-page/http://'],
+        ];
     }
 
     /**

@@ -23,7 +23,7 @@ class NormalizeUrl
         }
 
         if (!preg_match('#^https?://#i', $url)) {
-            $url = $this->urlModel->getUrl($url);
+            $url = $this->urlModel->getUrl(null, ['_direct' => ltrim($url, '/')]);
         }
 
         return $url;

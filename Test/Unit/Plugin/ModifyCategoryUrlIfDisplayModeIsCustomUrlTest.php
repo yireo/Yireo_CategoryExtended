@@ -66,7 +66,7 @@ class ModifyCategoryUrlIfDisplayModeIsCustomUrlTest extends TestCase
         $urlModel = $this->createMock(UrlInterface::class);
         $urlModel->expects($getUrlExpectation)
             ->method('getUrl')
-            ->willReturnCallback(fn (string $path) => 'https://shop.test/' . $path);
+            ->willReturnCallback(fn (?string $routePath, array $params) => 'https://shop.test/' . $params['_direct']);
 
         $plugin = new ModifyCategoryUrlIfDisplayModeIsCustomUrl(new NormalizeUrl($urlModel, new CustomUrlValidator()));
 

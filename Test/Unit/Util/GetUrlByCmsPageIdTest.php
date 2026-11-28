@@ -4,6 +4,7 @@ namespace Yireo\CategoryExtended\Test\Unit\Util;
 
 use Magento\Cms\Api\PageRepositoryInterface;
 use Magento\Cms\Model\Page;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
 use Magento\Store\Api\Data\StoreInterface;
@@ -75,23 +76,58 @@ class GetUrlByCmsPageIdTest extends TestCase
         );
     }
 
-    private function createUrlModel(): UrlInterface
+    public function testNestedIdentifierIsUsedAsDirectPath(): void
+    {
+        $this->assertSame(
+            'https://shop.test/company/about/team/history',
+            $this->create(
+                $this->createUrlModel('company/about/team/history'),
+                $this->createRepository(true, ['0'], 'company/about/team/history')
+            )->get(42)
+        );
+    }
+
+    public function testRepositoryErrorThrowsException(): void
+    {
+        $repository = $this->createMock(PageRepositoryInterface::class);
+        $repository->method('getById')->with(42)->willThrowException(new LocalizedException(__('Error')));
+
+        $this->expectException(InvalidCmsPageId::class);
+        $this->create($this->createMock(UrlInterface::class), $repository)->get(42);
+    }
+
+    public function testUnresolvableCurrentStoreThrowsException(): void
+    {
+        $urlModel = $this->createMock(UrlInterface::class);
+        $urlModel->expects($this->never())->method('getUrl');
+
+        $storeManager = $this->createMock(StoreManagerInterface::class);
+        $storeManager->method('getStore')->willThrowException(new NoSuchEntityException());
+
+        $this->expectException(InvalidCmsPageId::class);
+        (new GetUrlByCmsPageId($urlModel, $this->createRepository(true, ['1']), $storeManager))->get(42);
+    }
+
+    private function createUrlModel(string $identifier = 'about-us'): UrlInterface
     {
         $urlModel = $this->createMock(UrlInterface::class);
         $urlModel->expects($this->once())
             ->method('getUrl')
-            ->with('about-us')
-            ->willReturn('https://shop.test/about-us');
+            ->with(null, ['_direct' => $identifier])
+            ->willReturn('https://shop.test/' . $identifier);
 
         return $urlModel;
     }
 
-    private function createRepository(bool $active, array $storeIds): PageRepositoryInterface
-    {
+    private function createRepository(
+        bool $active,
+        array $storeIds,
+        string $identifier = 'about-us'
+    ): PageRepositoryInterface {
         $page = $this->createMock(Page::class);
         $page->method('isActive')->willReturn($active);
         $page->method('getStores')->willReturn($storeIds);
-        $page->method('getIdentifier')->willReturn('about-us');
+        $page->method('getIdentifier')->willReturn($identifier);
 
         $repository = $this->createMock(PageRepositoryInterface::class);
         $repository->method('getById')->with(42)->willReturn($page);
